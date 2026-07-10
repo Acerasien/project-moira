@@ -1,44 +1,157 @@
-# Moira — Documentation
+# Moira
 
-> **This `docs/` folder is the single source of truth for this project.**
-> If code and docs disagree, docs win until a human explicitly resolves the conflict.
-> Every agent (human or AI) MUST read `docs/00-project-rules.md` and its own role doc before taking action.
+> *An immersive tarot reading experience — elegant, restrained, and deeply intentional.*
 
-## Status
-- Created: 2026-07-09
-- Last full sync: 2026-07-09
-- Project stage: planning
+Moira is a beautifully crafted tarot web app that provides daily single-card draws and curated multi-card spreads using a traditional 78-card Rider-Waite-Smith deck. Every interpretation is hand-crafted — no AI generation, no accounts, no clutter. Just a quiet, meaningful reading experience.
 
-## Doc Index
+---
 
-| # | Doc | Owning Agent(s) | Applies to this project? | Last updated |
-|---|-----|------------------|---------------------------|--------------|
-| 00 | [Project Rules](docs/00-project-rules.md) | All | Yes | 2026-07-09 |
-| 01 | [System Overview](docs/01-system-overview.md) | All | Yes | 2026-07-09 |
-| 02 | [Architecture](docs/02-architecture.md) | Architect | Yes | 2026-07-09 |
-| 03 | [Orchestrator](docs/03-orchestrator.md) | Orchestrator | Yes | 2026-07-09 |
-| 04 | [Planner Agent](docs/04-planner-agent.md) | Planner | Yes (light) | 2026-07-09 |
-| 05 | [Architect Agent](docs/05-architect-agent.md) | Architect | Yes (light) | 2026-07-09 |
-| 06 | [Backend Agent](docs/06-backend-agent.md) | Backend | No — stubbed | 2026-07-09 |
-| 07 | [Frontend Agent](docs/07-frontend-agent.md) | Frontend | Yes | 2026-07-09 |
-| 08 | [QA Agent](docs/08-qa-agent.md) | QA | Yes (light) | 2026-07-09 |
-| 09 | [Debug Agent](docs/09-debug-agent.md) | Debug | Yes (light) | 2026-07-09 |
-| 10 | [Security Agent](docs/10-security-agent.md) | Security | No — stubbed | 2026-07-09 |
-| 11 | [DevOps Agent](docs/11-devops-agent.md) | DevOps | Yes (light) | 2026-07-09 |
-| 12 | [Reporter Agent](docs/12-reporter-agent.md) | Reporter | Yes (light) | 2026-07-09 |
-| 13 | [Agent Communication](docs/13-agent-communication.md) | All | Yes | 2026-07-09 |
-| 14 | [Project Memory](docs/14-project-memory.md) | All | Yes | 2026-07-09 |
-| 15 | [Workflow](docs/15-workflow.md) | All | Yes | 2026-07-09 |
-| 16 | [Repository Structure](docs/16-repository-structure.md) | All | Yes | 2026-07-09 |
-| 17 | [Coding Standard](docs/17-coding-standard.md) | Backend, Frontend | Yes | 2026-07-09 |
-| 18 | [Testing Standard](docs/18-testing-standard.md) | QA | Yes | 2026-07-09 |
-| 19 | [Deployment](docs/19-deployment.md) | DevOps | Yes | 2026-07-09 |
-| 20 | [Roadmap](docs/20-roadmap.md) | Planner, Human | Yes | 2026-07-09 |
+## ✨ Features
 
-## How to use this doc set
+- **Daily Draw** — A single card pulled fresh each day for a moment of reflection
+- **10 Curated Spreads** — From a simple single card to the full 10-card Celtic Cross
+- **78-Card Deck** — Full Rider-Waite-Smith deck with all Major and Minor Arcana
+- **156 Hand-Crafted Interpretations** — Upright and reversed meanings written with warmth and depth
+- **Card Library** — Browse, search, and study all 78 cards and their meanings
+- **Export Ready** — Save memorable readings as PNG or PDF keepsakes
+- **Ephemeral by Default** — Nothing is stored unless you choose to save it
+- **Fully Accessible** — WCAG AA compliant, keyboard navigable, reduced-motion support
 
-1. **Before starting any task**, read `00-project-rules.md`, your own role doc, and `14-project-memory.md`.
-2. **When you make a decision** that future agents need to know about, record it in `14-project-memory.md`, not just in chat/commit history.
-3. **When you finish a task**, update the "Last updated" field for any doc you touched.
-4. **If you disagree with a doc**, don't silently override it — propose the change, get it confirmed (by a human, or per the escalation rule in `00-project-rules.md`), then edit the doc.
-5. **Run a sync pass periodically** (see `15-workflow.md`) to catch docs that have drifted from reality.
+---
+
+## 📖 Spreads
+
+| Spread | Cards | Purpose |
+|---|---|---|
+| Single Card | 1 | Quick daily insight |
+| Yes / No | 1 | Direct answer to a question |
+| Past · Present · Future | 3 | Narrative arc reading |
+| Mind · Body · Spirit | 3 | Holistic self-check |
+| Relationship | 5 | Two-person dynamic |
+| Career Path | 5 | Professional guidance |
+| Horseshoe | 7 | Situation & outcome overview |
+| Star Guide | 6 | Life path & purpose |
+| New Moon | 7 | Intention setting |
+| Celtic Cross | 10 | Deep, comprehensive reading |
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | [React 19](https://react.dev/) |
+| Language | TypeScript |
+| Routing | React Router v7 |
+| Styling | Tailwind CSS v3 |
+| Build | Vite 6 |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** `>= 18.x`
+- **npm** `>= 9.x`
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/Acerasien/project-moira.git
+cd project-moira/project-moira
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`.
+
+### Available Scripts
+
+```bash
+npm run dev       # Start local development server
+npm run build     # Compile TypeScript + bundle for production
+npm run preview   # Preview the production build locally
+```
+
+---
+
+## 🎨 Design System
+
+Moira's aesthetic is inspired by **"The Private Library"** — a quiet, wood-paneled reading room at dusk. The interface draws from Notion's clean hierarchy, Arc Browser's refined motion, and Spotify's editorial depth.
+
+### Color Palette
+
+| Token | Value | Usage |
+|---|---|---|
+| Deep Indigo | `#0B1020` | Primary canvas background |
+| Elevated Navy | `#141B2D` | Cards, panels, modals |
+| Border Slate | `#2A3550` | Dividers, borders |
+| Cream Text | `#F5F1E8` | Primary body text |
+| Muted Lavender-Gray | `#A6AFC3` | Secondary text, labels |
+| Warm Gold | `#C8A96A` | Sole accent — ≤10% of any screen |
+
+### Typography
+
+- **Display** — Cormorant Garamond (serif) — for card names, headlines, ritual moments
+- **Body** — Inter (sans-serif) — for all interpretation text and UI copy
+
+---
+
+## 📁 Project Structure
+
+```
+project-moira/
+├── public/                  # Static assets
+├── src/
+│   ├── components/
+│   │   ├── daily-draw/      # Daily draw page components
+│   │   ├── decorative/      # Atmospheric / visual elements
+│   │   ├── home/            # Landing page sections
+│   │   ├── spread-browser/  # Spread selection UI
+│   │   └── spread-reading/  # Active spread reading UI
+│   ├── data/
+│   │   ├── cards/
+│   │   │   ├── major/       # 22 Major Arcana card data
+│   │   │   └── minor/       # 56 Minor Arcana (Cups, Wands, Swords, Pentacles)
+│   │   └── spreads/         # Spread definitions and positions
+│   ├── pages/               # Route-level page components
+│   ├── services/            # Card and spread logic
+│   ├── App.tsx              # Root component & routing
+│   └── main.tsx             # Application entry point
+├── docs/                    # Project documentation
+├── DESIGN.md                # Design system reference
+├── PRODUCT.md               # Product vision & principles
+└── package.json
+```
+
+---
+
+## 📐 Design Principles
+
+1. **The card is the hero.** UI recedes until needed.
+2. **Depth without intimidation.** Beginners feel welcomed; enthusiasts find substance.
+3. **Stillness over noise.** Every element earns its place.
+4. **Warmth through craft.** Hand-written interpretations, human care in design.
+5. **Moments, not metrics.** Readings are experiences to savor, not data to track.
+
+---
+
+## ♿ Accessibility
+
+- WCAG AA contrast compliance across all text and interactive elements
+- `prefers-reduced-motion` support on all animations
+- Full keyboard navigation
+- Color is never the sole differentiator — suits use icons and labels alongside color
+- Body text ≥ 16px with comfortable line length (65–75ch)
+
+---
+
+## 📄 License
+
+This project is private. All card interpretations are original hand-crafted content.
