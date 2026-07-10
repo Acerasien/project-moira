@@ -6,11 +6,11 @@ import type { SpreadDefinition } from "../data/spreads/types";
 import TopBar from "../components/spread-reading/TopBar";
 import PositionalLayout, { type SlotState } from "../components/spread-reading/PositionalLayout";
 import ShuffleAnimation from "../components/spread-reading/ShuffleAnimation";
-import InterpretationPanel from "../components/spread-reading/InterpretationPanel";
+import CardFocusView from "../components/spread-reading/CardFocusView";
 import Synthesis from "../components/spread-reading/Synthesis";
 import ActionBar from "../components/spread-reading/ActionBar";
 
-type Phase = "arrival" | "shuffling" | "dealing" | "ready" | "revealing" | "complete";
+type Phase = "arrival" | "shuffling" | "dealing" | "ready" | "complete";
 
 export default function SpreadReadingPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +20,7 @@ export default function SpreadReadingPage() {
   const [slots, setSlots] = useState<SlotState[]>([]);
   const [phase, setPhase] = useState<Phase>("arrival");
   const [revealedIndices, setRevealedIndices] = useState<Set<number>>(new Set());
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [error, setError] = useState(false);
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -31,12 +31,10 @@ export default function SpreadReadingPage() {
     timers.current = [];
   }, []);
 
-  // Check reduced motion
   useEffect(() => {
     reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }, []);
 
-  // Load spread and draw cards
   useEffect(() => {
     if (!id) { navigate("/spreads"); return; }
     const found = getSpreadById(id);
@@ -65,41 +63,45 @@ export default function SpreadReadingPage() {
     return clearTimers;
   }, [id, navigate, clearTimers]);
 
-  // Handle shuffle completion
   const handleShuffleDone = useCallback(() => {
     clearTimers();
     setPhase("dealing");
-
     if (!spread) return;
-    const count = spread.cardCount;
     timers.current.push(
-      setTimeout(() => {
-        setPhase("ready");
-      }, count * 150 + 200),
+      setTimeout(() => setPhase("ready"), spread.cardCount * 150 + 200),
     );
   }, [spread, clearTimers]);
 
-  // Handle card reveal
   const handleReveal = useCallback(
     (index: number) => {
-      if (revealedIndices.has(index)) return;
-      setSelectedIndex(index);
+      // If already revealed, just re-open focus view
+      if (revealedIndices.has(index)) {
+        setFocusedIndex(index);
+        return;
+      }
 
+      // Flip the card in the grid first, then show focus
       const newRevealed = new Set(revealedIndices);
       newRevealed.add(index);
       setRevealedIndices(newRevealed);
 
-      setPhase("revealing");
+      // Show focus after flip animation (500ms) + brief pause (200ms)
+      timers.current.push(
+        setTimeout(() => setFocusedIndex(index), 700),
+      );
 
       // Check if all revealed
       if (spread && newRevealed.size >= spread.cardCount) {
-        timers.current.push(setTimeout(() => setPhase("complete"), 600));
+        timers.current.push(setTimeout(() => setPhase("complete"), 1200));
       }
     },
     [revealedIndices, spread],
   );
 
-  // Error state
+  const handleCloseFocus = useCallback(() => {
+    setFocusedIndex(null);
+  }, []);
+
   if (error) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-lg text-center">
@@ -128,22 +130,20 @@ export default function SpreadReadingPage() {
   const maxRow = Math.max(...spread.positions.map((p) => p.row));
   const maxCol = Math.max(...spread.positions.map((p) => p.col));
   const allRevealed = phase === "complete";
-  const selectedSlot = selectedIndex !== null ? slots[selectedIndex] : null;
+  const focusedSlot = focusedIndex !== null ? slots[focusedIndex] : null;
 
   return (
     <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
       <TopBar spreadName={spread.name} />
 
       <div className="flex flex-col items-center px-lg pb-xl">
-        {/* Shuffle animation */}
         {phase === "shuffling" && (
           <div className="py-2xl">
             <ShuffleAnimation visible={true} onSkip={handleShuffleDone} />
           </div>
         )}
 
-        {/* Positional layout */}
-        {(phase === "dealing" || phase === "ready" || phase === "revealing" || phase === "complete") && (
+        {(phase === "dealing" || phase === "ready" || phase === "complete") && (
           <PositionalLayout
             slots={slots}
             revealedIndices={revealedIndices}
@@ -154,32 +154,30 @@ export default function SpreadReadingPage() {
           />
         )}
 
-        {/* Dealing stagger indicator */}
         {phase === "dealing" && (
           <p className="mt-lg font-body text-body text-text-muted">
             Dealing cards...
           </p>
         )}
 
-        {/* Interpretation */}
-        {selectedSlot?.card && (
-          <InterpretationPanel
-            card={selectedSlot.card}
-            position={selectedSlot.position}
-            isReversed={selectedSlot.isReversed ?? false}
-            visible={phase === "revealing" || phase === "complete"}
-          />
-        )}
-
-        {/* Synthesis */}
         <Synthesis text={spread.synthesis} visible={allRevealed} />
 
-        {/* Actions */}
         <ActionBar
           visible={allRevealed}
           onExport={() => alert("Export coming soon")}
         />
       </div>
+
+      {/* Focus view for revealed card */}
+      {focusedSlot?.card && (
+        <CardFocusView
+          card={focusedSlot.card}
+          position={focusedSlot.position}
+          isReversed={focusedSlot.isReversed ?? false}
+          visible={focusedIndex !== null}
+          onClose={handleCloseFocus}
+        />
+      )}
     </div>
   );
 }

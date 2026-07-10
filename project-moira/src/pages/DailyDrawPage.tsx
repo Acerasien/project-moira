@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getDailyCard } from "../services/cardService";
 import type { TarotCard } from "../data/cards/types";
@@ -17,6 +18,7 @@ const INTERPRETATION_STAGGER = 250;
 const INTERPRETATION_SECTIONS = 6;
 
 export default function DailyDrawPage() {
+  const navigate = useNavigate();
   const [phase, setPhase] = useState<Phase>("loading");
   const [card, setCard] = useState<TarotCard | null>(null);
   const [isReversed, setIsReversed] = useState(false);
@@ -25,13 +27,11 @@ export default function DailyDrawPage() {
   const reducedMotion = useRef(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  // Check reduced motion
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     reducedMotion.current = mq.matches;
   }, []);
 
-  // Load card data
   useEffect(() => {
     try {
       const dailyCard = getDailyCard();
@@ -48,7 +48,6 @@ export default function DailyDrawPage() {
     }
   }, []);
 
-  // Cleanup timers
   useEffect(() => {
     return () => timers.current.forEach(clearTimeout);
   }, []);
@@ -58,13 +57,11 @@ export default function DailyDrawPage() {
     timers.current = [];
   }, []);
 
-  // Handle ritual completion
   const handleRitualComplete = useCallback(() => {
     setPhase("face-down");
     timers.current.push(setTimeout(() => setPromptVisible(true), 300));
   }, []);
 
-  // Handle card flip
   const handleFlip = useCallback(() => {
     if (phase !== "face-down") return;
     clearTimers();
@@ -77,13 +74,11 @@ export default function DailyDrawPage() {
         timers.current.push(
           setTimeout(() => {
             setPhase("interpreting");
-            // Stagger interpretation sections
             for (let i = 1; i <= INTERPRETATION_SECTIONS; i++) {
               timers.current.push(
                 setTimeout(() => setVisibleSections(i), i * INTERPRETATION_STAGGER),
               );
             }
-            // Mark complete after all sections
             timers.current.push(
               setTimeout(() => setPhase("complete"), INTERPRETATION_SECTIONS * INTERPRETATION_STAGGER + 300),
             );
@@ -93,7 +88,6 @@ export default function DailyDrawPage() {
     );
   }, [phase, clearTimers]);
 
-  // Loading state
   if (phase === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -105,7 +99,6 @@ export default function DailyDrawPage() {
     );
   }
 
-  // Error state
   if (phase === "error" || !card) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-lg text-center">
@@ -138,13 +131,20 @@ export default function DailyDrawPage() {
         transitionTimingFunction: "var(--ease-out)",
       }}
     >
+      <button
+        onClick={() => navigate("/")}
+        className="absolute left-lg top-lg z-20 font-body text-label uppercase tracking-wider transition-colors duration-[200ms]"
+        style={{ color: "var(--color-text-muted)" }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = "var(--color-text)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = "var(--color-text-muted)"; }}
+      >
+        ← Home
+      </button>
       <CelestialBackground />
       <AtmosphericGlow />
 
-      {/* Opening Ritual */}
       {phase === "ritual" && <OpeningRitual onComplete={handleRitualComplete} />}
 
-      {/* Card */}
       {showCard && (
         <CardContainer
           cardImage={card.image}
@@ -155,7 +155,6 @@ export default function DailyDrawPage() {
         />
       )}
 
-      {/* Prompt text (face-down) */}
       {phase === "face-down" && (
         <PromptText
           visible={promptVisible}
@@ -163,7 +162,6 @@ export default function DailyDrawPage() {
         />
       )}
 
-      {/* Interpretation */}
       {showInterpretation && (
         <Interpretation
           card={card}
@@ -172,7 +170,6 @@ export default function DailyDrawPage() {
         />
       )}
 
-      {/* Actions */}
       <ActionBar visible={showActions} cardId={card.id} />
     </div>
   );

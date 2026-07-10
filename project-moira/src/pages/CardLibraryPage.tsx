@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAllCards } from "../services/cardService";
 import type { TarotCard } from "../data/cards/types";
 import FilterBar from "../components/card-library/FilterBar";
@@ -8,6 +9,7 @@ type ArcanaFilter = "all" | "major" | "minor";
 type SuitFilter = "all" | "cups" | "pentacles" | "swords" | "wands";
 
 export default function CardLibraryPage() {
+  const navigate = useNavigate();
   const [arcana, setArcana] = useState<ArcanaFilter>("all");
   const [suit, setSuit] = useState<SuitFilter>("all");
 
@@ -29,6 +31,15 @@ export default function CardLibraryPage() {
   return (
     <main className="min-h-screen px-lg py-3xl">
       <div className="mx-auto max-w-[960px]">
+        <button
+          onClick={() => navigate("/")}
+          className="mb-lg font-body text-label uppercase tracking-wider transition-colors duration-[200ms]"
+          style={{ color: "var(--color-text-muted)" }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--color-text)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--color-text-muted)"; }}
+        >
+          ← Home
+        </button>
         <h1 className="text-center font-display text-display-lg text-text text-balance">
           The Cards
         </h1>

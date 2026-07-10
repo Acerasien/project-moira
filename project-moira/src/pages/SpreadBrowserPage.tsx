@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAllSpreads, getSpreadsByCategory } from "../services/spreadService";
 import type { SpreadDefinition } from "../data/spreads/types";
 import FilterPills from "../components/spread-browser/FilterPills";
@@ -13,6 +14,7 @@ const CATEGORIES = [
 ];
 
 export default function SpreadBrowserPage() {
+  const navigate = useNavigate();
   const [spreads, setSpreads] = useState<SpreadDefinition[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("all");
@@ -33,6 +35,15 @@ export default function SpreadBrowserPage() {
   return (
     <main className="min-h-screen px-lg py-3xl">
       <div className="mx-auto max-w-[800px]">
+        <button
+          onClick={() => navigate("/")}
+          className="mb-lg font-body text-label uppercase tracking-wider transition-colors duration-[200ms]"
+          style={{ color: "var(--color-text-muted)" }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--color-text)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--color-text-muted)"; }}
+        >
+          ← Home
+        </button>
         <h1 className="text-center font-display text-display-lg text-text text-balance">
           Choose a Spread
         </h1>
